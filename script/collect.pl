@@ -9,8 +9,8 @@ use Data::Dumper qw(Dumper);
 use WebService::GData::YouTube;
 my $yt = WebService::GData::YouTube->new();
 
-my ($config_file, $data_file) = @ARGV;
-die "Usage $0 channels.yml data.yml\n" if not $data_file;
+my ($config_file) = @ARGV;
+die "Usage $0 channels.yml\n" if not $config_file;
 
 
 my $config = LoadFile($config_file);
@@ -26,6 +26,7 @@ foreach my $ch (sort keys %{$config->{channels}}) {
 		say "   $id";
 		my $video = $yt->get_video_by_id($id);
 		$film->{$time}{view_count} = $video->view_count;
+		$film->{title} = $video->title;
 	}
 }
 
