@@ -1,2 +1,3 @@
 logs
-channels.yml
+data
+*.swp
