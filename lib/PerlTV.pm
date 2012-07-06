@@ -11,13 +11,18 @@ use YAML qw(LoadFile);
 #};
 
 
+hook before => sub {
+	var channels => LoadFile config->{appdir} . '/data/one_channel.yml';
+};
+
+
 get '/' => sub {
-	my $channels = LoadFile config->{appdir} . '/data/one_channel.yml';
+	my $channels = vars->{channels};
     template 'one/index', $channels, { layout => 'one' };
 };
 
 get '/about' => sub {
-	my $channels = {};
+	my $channels = vars->{channels};
     template 'one/about', $channels, { layout => 'one' };
 };
 
