@@ -6,7 +6,7 @@ our $VERSION = '0.1';
 use YAML qw(LoadFile);
 
 get '/' => sub {
-	my $channels = LoadFile '/home/gabor/channels.yml';
+	my $channels = LoadFile config->{appdir} . '/data/channels.yml';
     template 'index', $channels;
 };
 
