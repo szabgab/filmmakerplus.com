@@ -1,6 +1,6 @@
 
 <ul>
 <% FOR f IN films %>
-  <li><a href="/v/<% f.video_id %>"><% f.title %></a></li>
+  <li><a href="/v/<% f.video_id %>"><% f.title %></a><img src = "<% f.thumbnails %>"></li>
 <% END %>
 </ul>
