@@ -1,12 +1,13 @@
+<% IF profile.about_me %>
 About the channel owner: <% profile.about_me %><br />
-Video count: <% number_of_videos %><br />
+<% END %>
+Video count: <% calculated.number_of_videos %><br />
 Total view count: <% profile.statistics.total_upload_views %><br />
 <img src="<% profile.thumbnail %>" />
 
 
 <hr />
 
-We have to put some info here about this site....
 <p>
-Created by <a href="http://szabgab.com/">Gabor Szabo</a>.
+Site created by <a href="http://szabgab.com/">Gabor Szabo</a>.
 
