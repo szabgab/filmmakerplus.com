@@ -35,7 +35,7 @@ body {
           <a class="brand" href="/"><% channel %></a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="/all">All</a></li>
+              <li><a href="/all">Videos</a></li>
             </ul>
             <ul class="nav pull-right">
               <li><a href="/about">About</a></li>
@@ -56,7 +56,8 @@ body {
   </div>
 </div>
 
-<script src="/bootstrap/js/jquery.js"></script>
+<script src="/bootstrap/js/jquery-1.7.2.min.js"></script>
+<!--
 <script src="/bootstrap/js/bootstrap-transition.js"></script>
 <script src="/bootstrap/js/bootstrap-alert.js"></script>
 <script src="/bootstrap/js/bootstrap-modal.js"></script>
@@ -67,9 +68,15 @@ body {
 <script src="/bootstrap/js/bootstrap-popover.js"></script>
 <script src="/bootstrap/js/bootstrap-button.js"></script>
 <script src="/bootstrap/js/bootstrap-collapse.js"></script>
+-->
 <script src="/bootstrap/js/bootstrap-carousel.js"></script>
+<!--
 <script src="/bootstrap/js/bootstrap-typeahead.js"></script>
+-->
 
+<script>
+$('.carousel').carousel();
+</script>
 
 <% IF adwords %>
 <!-- Google Adwords -->

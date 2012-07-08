@@ -1,13 +1,35 @@
-<% IF profile.about_me %>
+
+<div class="hero-unit">
+  <h1>FilmMakerPlus</h1>
+  <img src="<% profile.thumbnail %>" />
+ <p>
+  <% IF profile.about_me %>
 About the channel owner: <% profile.about_me %><br />
 <% END %>
 Video count: <% calculated.number_of_videos %><br />
 Total view count: <% profile.statistics.total_upload_views %><br />
-<img src="<% profile.thumbnail %>" />
-
-<a class="btn btn-warning" href="http://www.youtube.com/subscription_center?src_vid=QwNVQvygCNQ&annotation_id=annotation_58205&add_user=FilmMakerPlus&feature=iv">subscribe</a> via YouTube
-<hr />
-
-<p>
+</p>
+  <p>
+    <a class="btn btn-primary btn-large">
+      Subscribe via YouTube
+    </a>
+  </p>
+</div>
+<pre class="prettyprin
+     linenums">
 Site created by <a href="http://szabgab.com/">Gabor Szabo</a>.
+</pre>
 
+<div id="myCarousel" class="carousel slide">
+  <!-- Carousel items -->
+  <div class="carousel-inner">
+    <div class="active item"><img src="http://i.ytimg.com/vi/p8gEtN6Ls3k/default.jpg"></div>
+    <% FOR f IN films %>
+   <div class="item"><img src="<% f.thumbnails.0.url %>"></div>
+    <% END %> 
+    
+  </div>
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>

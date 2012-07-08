@@ -1,9 +1,19 @@
-<a class="btn" href="http://www.youtube.com/subscription_center?src_vid=QwNVQvygCNQ&annotation_id=annotation_58205&add_user=FilmMakerPlus&feature=iv">subscribe</a> to <% channel %>'s channel
-<h1>
-<% current.title %>
-</h1>
+
+<div class="hero-unit">
+  <h1>FilmMakerPlus</h1>
+
+  <p>
+    <a class="btn btn-primary btn-large">
+      Subscribe via YouTube
+    </a>
+<h2>
+<% current.title %> :
+</h2>
 <iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
 
 <p>
 <% current.description %>
 </p>
+  </p>
+</div>
+
