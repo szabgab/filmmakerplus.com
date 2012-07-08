@@ -46,10 +46,18 @@ body {
   <div class="row-fluid">
     <div class="span1">
     </div>
-    <div class="span8">
+    <div class="span9">
       <% content %>
     </div>
-    <div class="span3">
+    <div class="span2">
+         <% FOR f IN films %>
+		   <% IF loop.index < 5 %>
+		     <p>
+               <a href="/v/<% f.video_id %>"><img src="<% f.thumbnails.0.url %>" /><br /><% f.title %></a>
+               <% f.view_count %> views<br />
+		     </p>
+           <% END %>
+         <% END %>
     </div>
   </div>
 </div>

@@ -66,8 +66,7 @@ my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_cou
 $profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
 $config->{profile} = \%profile;
 
-my $videos = $yt->get_user_videos($channel);
-
+my @videos = reverse sort {$a->view_count <=> $b->view_count} @{ $yt->get_user_videos($channel) };
 
 my @video_fields = qw(
 	title
@@ -91,8 +90,8 @@ my @video_fields = qw(
 );
 
 my @films;
-$config->{calculated}{number_of_videos} = scalar @$videos;
-foreach my $v (@$videos) {
+$config->{calculated}{number_of_videos} = scalar @videos;
+foreach my $v (@videos) {
 	my %f;
 	#my $recorded = $v->recorded; # TODO  this is a WebService::GData::YouTube::YT::Recorded object
 
