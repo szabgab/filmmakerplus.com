@@ -1,6 +1,6 @@
 About the channel owner: <% profile.about_me %><br />
 Video count: <% number_of_videos %><br />
-Total view count: <% profile.statistics.totalUploadViews %><br />
+Total view count: <% profile.statistics.total_upload_views %><br />
 <img src="<% profile.thumbnail %>" />
 
 

@@ -55,10 +55,7 @@ my @profile_fields = qw(
     thumbnail
 );
 
-my %profile;
-foreach my $p (@profile_fields) {
-	$profile{$p} = $profile->$p;
-}
+my %profile = map { $_ => $profile->$_ } @profile_fields;
 my $stat = $profile->statistics;
 my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
 $profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
@@ -81,29 +78,19 @@ my @video_fields = qw(
 
 my @films;
 $config->{number_of_videos} = scalar @$videos;
+my @thumbnail_fields = qw(url height width time);
 foreach my $v (@$videos) {
-#say $v;
 	my %f;
-	foreach my $field (@video_fields) {
-		my $recorded = $v->recorded;
-		my $thumbnails = $v->thumbnails;
-		$f{$field} = $v->$field;
-		#say "$field : $f{$field}";
+	#my $recorded = $v->recorded; # TODO  this is a WebService::GData::YouTube::YT::Recorded object
+
+	my $thumbnails = $v->thumbnails;
+	foreach my $tn (@$thumbnails) {
+		my %data = map { $_ => $tn->$_ } @thumbnail_fields;
+		push @{ $f{thumbnails} }, \%data;
 	}
-	#if ($f{thumbnails}) {
-		#for my $i (0 .. @{ $f{thumbnails} } - 1) {
-			#say "$i : $f{thumbnails}[$i]";
-			#delete $f{thumbnails}[$i];
-			#$f{thumbnails}[$i] = 23;
-			#{
-			#	url    => $f{thumbnails}[$i]->url,
-			#	height => $f{thumbnails}[$i]->height,
-			#	width  => $f{thumbnails}[$i]->width,
-			#	time   => $f{thumbnails}[$i]->time,
-			#};
-	#		say "a: $f{thumbnails}[$i]";
-	#	}
-	#}
+	foreach my $field (@video_fields) {
+		$f{$field} = $v->$field;
+	}
 	push @films, \%f;
 	if (not defined $config->{latest} or $config->{latest}{uploaded} lt $f{uploaded}) {
 		$config->{latest} = {%f};
