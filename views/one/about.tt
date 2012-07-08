@@ -10,8 +10,8 @@ Video count: <% calculated.number_of_videos %><br />
 Total view count: <% profile.statistics.total_upload_views %><br />
 </p>
   <p>
-    <a class="btn btn-primary btn-large">
-      Subscribe via YouTube
+    <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
+      Subscribe via YouTube 
     </a>
   </p>
 </div>

@@ -3,7 +3,7 @@
   <h1><% channel %></h1>
 
   <p>
-    <a class="btn btn-primary btn-large">
+    <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
       Subscribe via YouTube
     </a>
 <h2>
