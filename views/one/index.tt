@@ -1,6 +1,6 @@
 
 <div class="hero-unit">
-  <h1>FilmMakerPlus</h1>
+  <h1><% channel %></h1>
 
   <p>
     <a class="btn btn-primary btn-large">
