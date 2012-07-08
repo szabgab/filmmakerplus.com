@@ -18,12 +18,13 @@ hook before => sub {
 
 get '/' => sub {
 	my $channels = vars->{channels};
+	$channels->{current} = $channels->{latest};
     template 'one/index', $channels, { layout => 'one' };
 };
 
 get '/v/:id' => sub {
 	my $channels = vars->{channels};
-	($channels->{latest}) =  grep { $_->{video_id} eq param('id') } @{ $channels->{films} };
+	($channels->{current}) =  grep { $_->{video_id} eq param('id') } @{ $channels->{films} };
     template 'one/index', $channels, { layout => 'one' };
 };
 
