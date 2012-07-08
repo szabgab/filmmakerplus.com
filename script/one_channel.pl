@@ -9,20 +9,31 @@ use Data::Dumper qw(Dumper);
 use WebService::GData::YouTube;
 my $yt = WebService::GData::YouTube->new();
 
-my ($config_file) = @ARGV;
-die "Usage $0 channels.yml\n" if not $config_file;
+my $conf = LoadFile 'config.yml';
+
+my ($site) = @ARGV;
+if (not $site) {
+	print "Usage: $0 site\n";
+	print "Available sites:\n\n";
+	foreach my $k (keys %{ $conf->{PerlTV} }) {
+		say "  $k";
+	}
+	exit;
+}
+if (not $conf->{PerlTV}{$site}) {
+	die "Site '$site' is not available\n";
+}
+
+my $channel = $conf->{PerlTV}{$site}{channel};
+my $config_file = "data/$channel.yml";
+#die if not -e $config_file;
 
 
-my $config = LoadFile($config_file);
-#print Dumper $config;
-#say $config->{channel};
+my $config;
 
 my $time = time;
 
-#my $videos = $yt->get_user_video_by_id($config->{channel});
-#
-
-my $profile = $yt->get_user_profile($config->{channel});
+my $profile = $yt->get_user_profile($channel);
 
 my @profile_fields = qw(
     updated
@@ -55,7 +66,7 @@ my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_cou
 $profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
 $config->{profile} = \%profile;
 
-my $videos = $yt->get_user_videos($config->{channel});
+my $videos = $yt->get_user_videos($channel);
 
 
 my @video_fields = qw(
