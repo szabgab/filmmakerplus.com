@@ -20,19 +20,18 @@ Total view count: <% profile.statistics.total_upload_views %><br />
 Site created by <a href="http://szabgab.com/">Gabor Szabo</a>.
 </pre>
 
+<!-- Carousel items
 <div id="myCarousel" class="carousel slide">
-  <!-- Carousel items -->
   <div class="carousel-inner">
     <% FOR f IN films %>
-       <% IF f.FIRST %>
+       <% IF loop.first %>
          <div class="active_item"><img src="<% f.thumbnails.0.url %>"></div>
        <% ELSE %>
          <div class="item"><img src="<% f.thumbnails.0.url %>"></div>
        <% END %>
-    <% END %> 
-    
+    <% END %>
   </div>
-  <!-- Carousel nav -->
   <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
   <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>
+-->

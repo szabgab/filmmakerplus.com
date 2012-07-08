@@ -27,14 +27,15 @@ hook before => sub {
 hook before_template => sub {
 	my $tokens = shift;
 	#delete $tokens->{user};
-	$tokens->{channel} = vars->{channels}{profile}{title} || vars->{channel};
+	$tokens->{channel} = vars->{channel};
+	$tokens->{page_title} ||= vars->{channel};
 };
 
 
 get '/' => sub {
 	my $channels = vars->{channels};
 	$channels->{current} = $channels->{latest};
-	$channels->{page_title} = $channels->{channel};
+	$channels->{page_title} = vars->{channels}{profile}{title} || vars->{channel};
     template 'one/index', $channels, { layout => 'one' };
 };
 
