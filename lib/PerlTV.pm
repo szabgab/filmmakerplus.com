@@ -26,9 +26,9 @@ hook before => sub {
 
 hook before_template => sub {
 	my $tokens = shift;
-	#delete $tokens->{user};
 	$tokens->{channel} = vars->{channel};
 	$tokens->{page_title} ||= vars->{channel};
+	$tokens->{brand} = vars->{channels}{profile}{title} || vars->{channel};
 };
 
 

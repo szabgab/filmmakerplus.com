@@ -1,6 +1,6 @@
 
 <div class="hero-unit">
-  <h1><% channel %></h1>
+  <h1><% brand %></h1>
   <img src="<% profile.thumbnail %>" />
  <p>
   <% IF profile.about_me %>
@@ -11,7 +11,7 @@ Total view count: <% profile.statistics.total_upload_views %><br />
 </p>
   <p>
     <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
-      Subscribe via YouTube 
+      Subscribe via YouTube
     </a>
   </p>
 </div>
