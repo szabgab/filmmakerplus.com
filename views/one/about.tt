@@ -1,4 +1,5 @@
-About the channel owner: <% profile.about_me %>
+About the channel owner: <% profile.about_me %><br />
+Video count: <% number_of_videos %><br />
 
 <hr />
 

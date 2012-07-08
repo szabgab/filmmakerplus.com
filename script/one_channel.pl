@@ -31,7 +31,7 @@ my $profile = $yt->get_user_profile($config->{channel});
 #    link
 #    author
 #    feed_links
-my @profile = qw(
+my @profile_fields = qw(
     updated
     published
     title
@@ -58,7 +58,7 @@ my @profile = qw(
 );
 
 my %profile;
-foreach my $p (@profile) {
+foreach my $p (@profile_fields) {
 	$profile{$p} = $profile->$p;
 }
 $config->{profile} = \%profile;
@@ -66,12 +66,27 @@ $config->{profile} = \%profile;
 my $videos = $yt->get_user_videos($config->{channel});
 #print scalar @$videos;
 
+
+my @video_fields = qw(
+	title
+	video_id
+	description
+	keywords
+	etag
+	view_count
+	favorite_count
+	thumbnails
+	recorded
+	duration
+	uploaded
+);
+
 my @films;
 $config->{number_of_videos} = scalar @$videos;
 foreach my $v (@$videos) {
 	#say "   $v";
 	my %f;
-	foreach my $field (qw(title video_id description keywords etag view_count recorded duration uploaded)) {
+	foreach my $field (@video_fields) {
 		$f{$field} = $v->$field;
 	}
 	push @films, \%f;
