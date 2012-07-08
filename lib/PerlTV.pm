@@ -29,6 +29,8 @@ hook before_template => sub {
 	$tokens->{channel} = vars->{channel};
 	$tokens->{page_title} ||= vars->{channel};
 	$tokens->{brand} = vars->{channels}{profile}{title} || vars->{channel};
+	$tokens->{adwords} = vars->{myconfig}{adwords};
+	$tokens->{clicky}  = vars->{myconfig}{clicky};
 };
 
 
