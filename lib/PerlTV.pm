@@ -31,6 +31,7 @@ hook before_template => sub {
 	$tokens->{brand} = vars->{channels}{profile}{title} || vars->{channel};
 	$tokens->{adwords} = vars->{myconfig}{adwords};
 	$tokens->{clicky}  = vars->{myconfig}{clicky};
+	$tokens->{show_thumbnails} = 1 unless request->uri =~ m{/videos};
 };
 
 
@@ -54,7 +55,7 @@ get '/about' => sub {
     template 'one/about', $channels, { layout => 'one' };
 };
 
-get '/all' => sub {
+get '/videos' => sub {
 	my $c = vars->{channels};
 	$c->{page_title} = "All the films of " . vars->{channel};
     template 'one/all', $c, { layout => 'one' };

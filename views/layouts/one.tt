@@ -33,7 +33,7 @@ body {
           <a class="brand" href="/"><% brand %></a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="/all">Videos</a></li>
+              <li><a href="/videos">Videos</a></li>
             </ul>
             <ul class="nav pull-right">
               <li><a href="/about">About</a></li>
@@ -50,6 +50,7 @@ body {
       <% content %>
     </div>
     <div class="span2">
+         <% IF show_thumbnails %>
          <% FOR f IN films %>
 		   <% IF loop.index < 5 %>
 		     <p>
@@ -58,6 +59,7 @@ body {
 		     </p>
            <% END %>
          <% END %>
+		<% END %>
     </div>
   </div>
 </div>
