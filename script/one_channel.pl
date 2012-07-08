@@ -23,7 +23,6 @@ my $time = time;
 #
 
 my $profile = $yt->get_user_profile($config->{channel});
-#say $profile;
 
 #    etag
 #    category
@@ -54,17 +53,18 @@ my @profile_fields = qw(
     occupation
     school
     thumbnail
-    statistics
 );
 
 my %profile;
 foreach my $p (@profile_fields) {
 	$profile{$p} = $profile->$p;
 }
+my $stat = $profile->statistics;
+my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
+$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
 $config->{profile} = \%profile;
 
 my $videos = $yt->get_user_videos($config->{channel});
-#print scalar @$videos;
 
 
 my @video_fields = qw(
@@ -75,8 +75,6 @@ my @video_fields = qw(
 	etag
 	view_count
 	favorite_count
-	thumbnails
-	recorded
 	duration
 	uploaded
 );
@@ -84,11 +82,28 @@ my @video_fields = qw(
 my @films;
 $config->{number_of_videos} = scalar @$videos;
 foreach my $v (@$videos) {
-	#say "   $v";
+#say $v;
 	my %f;
 	foreach my $field (@video_fields) {
+		my $recorded = $v->recorded;
+		my $thumbnails = $v->thumbnails;
 		$f{$field} = $v->$field;
+		#say "$field : $f{$field}";
 	}
+	#if ($f{thumbnails}) {
+		#for my $i (0 .. @{ $f{thumbnails} } - 1) {
+			#say "$i : $f{thumbnails}[$i]";
+			#delete $f{thumbnails}[$i];
+			#$f{thumbnails}[$i] = 23;
+			#{
+			#	url    => $f{thumbnails}[$i]->url,
+			#	height => $f{thumbnails}[$i]->height,
+			#	width  => $f{thumbnails}[$i]->width,
+			#	time   => $f{thumbnails}[$i]->time,
+			#};
+	#		say "a: $f{thumbnails}[$i]";
+	#	}
+	#}
 	push @films, \%f;
 	if (not defined $config->{latest} or $config->{latest}{uploaded} lt $f{uploaded}) {
 		$config->{latest} = {%f};
