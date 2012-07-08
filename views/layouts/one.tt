@@ -18,7 +18,7 @@ body {
 
 <link href="http://perl5maven.com/atom" rel="alternate" type="application/atom+xml" title ="Perl 5 Maven" />
 
-<title><% title %></title>
+<title><% page_title %></title>
 <meta name="description" content="<% description %>">
 <meta name="author" content="<% author %>">
 

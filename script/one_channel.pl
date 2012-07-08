@@ -23,14 +23,7 @@ my $time = time;
 #
 
 my $profile = $yt->get_user_profile($config->{channel});
-#say $profile;
 
-#    etag
-#    category
-#    id
-#    link
-#    author
-#    feed_links
 my @profile_fields = qw(
     updated
     published
@@ -54,17 +47,15 @@ my @profile_fields = qw(
     occupation
     school
     thumbnail
-    statistics
 );
 
-my %profile;
-foreach my $p (@profile_fields) {
-	$profile{$p} = $profile->$p;
-}
+my %profile = map { $_ => $profile->$_ } @profile_fields;
+my $stat = $profile->statistics;
+my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
+$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
 $config->{profile} = \%profile;
 
 my $videos = $yt->get_user_videos($config->{channel});
-#print scalar @$videos;
 
 
 my @video_fields = qw(
@@ -75,17 +66,42 @@ my @video_fields = qw(
 	etag
 	view_count
 	favorite_count
-	thumbnails
-	recorded
 	duration
 	uploaded
+	media_player
+	aspect_ratio
+	comments
+	appcontrol_state
+	denied_countries
+	restriction
+	uploaded
+	genre
+	location
 );
 
 my @films;
-$config->{number_of_videos} = scalar @$videos;
+$config->{calculated}{number_of_videos} = scalar @$videos;
 foreach my $v (@$videos) {
-	#say "   $v";
 	my %f;
+	#my $recorded = $v->recorded; # TODO  this is a WebService::GData::YouTube::YT::Recorded object
+
+	my @thumbnail_fields = qw(url height width time);
+	my $thumbnails = $v->thumbnails;
+	foreach my $tn (@$thumbnails) {
+		my %data = map { $_ => $tn->$_ } @thumbnail_fields;
+		push @{ $f{thumbnails} }, \%data;
+	}
+
+    my @rating_fields = qw(num_likes num_dislikes);
+	my $rating = $v->rating; # WebService::GData::YouTube::YT::Rating
+	$f{rating} = { map { $_ => $rating->$_ } @rating_fields };
+
+	# category TODO array of WebService::GData::Node::Media::Category
+
+	#my $content = $v->content;
+	#die Dumper $content;
+	# TODO array of WebService::GData::YouTube::YT::Media::Content
+
 	foreach my $field (@video_fields) {
 		$f{$field} = $v->$field;
 	}

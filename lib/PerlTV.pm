@@ -19,22 +19,27 @@ hook before => sub {
 get '/' => sub {
 	my $channels = vars->{channels};
 	$channels->{current} = $channels->{latest};
+	$channels->{page_title} = $channels->{profile}{title} || $channels->{channel};
     template 'one/index', $channels, { layout => 'one' };
 };
 
 get '/v/:id' => sub {
 	my $channels = vars->{channels};
 	($channels->{current}) =  grep { $_->{video_id} eq param('id') } @{ $channels->{films} };
+	$channels->{page_title} = $channels->{current}{title};
     template 'one/index', $channels, { layout => 'one' };
 };
 
 get '/about' => sub {
 	my $channels = vars->{channels};
+	$channels->{page_title} = "About $channels->{channel}";
     template 'one/about', $channels, { layout => 'one' };
 };
 
 get '/all' => sub {
-    template 'one/all', vars->{channels}, { layout => 'one' };
+	my $c = vars->{channels};
+	$c->{page_title} = "All the films of $c->{channel}";
+    template 'one/all', $c, { layout => 'one' };
 };
 
 true;
