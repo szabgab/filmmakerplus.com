@@ -23,9 +23,12 @@ Site created by <a href="http://szabgab.com/">Gabor Szabo</a>.
 <div id="myCarousel" class="carousel slide">
   <!-- Carousel items -->
   <div class="carousel-inner">
-    <div class="active item"><img src="http://i.ytimg.com/vi/p8gEtN6Ls3k/default.jpg"></div>
     <% FOR f IN films %>
-   <div class="item"><img src="<% f.thumbnails.0.url %>"></div>
+       <% IF f.FIRST %>
+         <div class="active_item"><img src="<% f.thumbnails.0.url %>"></div>
+       <% ELSE %>
+         <div class="item"><img src="<% f.thumbnails.0.url %>"></div>
+       <% END %>
     <% END %> 
     
   </div>
