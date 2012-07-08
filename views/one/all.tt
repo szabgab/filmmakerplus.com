@@ -1,0 +1,6 @@
+
+<ul>
+<% FOR f IN films %>
+  <li><a href="http://www.youtube.com/watch?v=<% f.video_id %>"><% f.title %></a></li>
+<% END %>
+</ul>

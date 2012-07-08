@@ -26,5 +26,8 @@ get '/about' => sub {
     template 'one/about', $channels, { layout => 'one' };
 };
 
+get '/all' => sub {
+    template 'one/all', vars->{channels}, { layout => 'one' };
+};
 
 true;

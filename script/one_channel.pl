@@ -24,14 +24,13 @@ my $time = time;
 
 my $profile = $yt->get_user_profile($config->{channel});
 #say $profile;
-#my $videos = $yt->get_user_videos($config->{channel});
-#print scalar @$videos;
 
 #    etag
 #    category
 #    id
 #    link
 #    author
+#    feed_links
 my @profile = qw(
     updated
     published
@@ -55,7 +54,6 @@ my @profile = qw(
     occupation
     school
     thumbnail
-    feed_links
     statistics
 );
 
@@ -65,18 +63,24 @@ foreach my $p (@profile) {
 }
 $config->{profile} = \%profile;
 
+my $videos = $yt->get_user_videos($config->{channel});
+#print scalar @$videos;
 
-#foreach my $ch (sort keys %{$config->{channels}}) {
-#	say "$ch: $config->{channels}{$ch}{title}";
-#	foreach my $film (@{ $config->{channels}{$ch}{films} }) {
-#		say "   $film";
-#		my ($id) = $film->{url} =~ m{([^=]+$)};
-#		say "   $id";
-#		my $video = $yt->get_video_by_id($id);
-#		$film->{$time}{view_count} = $video->view_count;
-#		$film->{title} = $video->title;
-#	}
-#}
+my @films;
+$config->{number_of_videos} = scalar @$videos;
+foreach my $v (@$videos) {
+	#say "   $v";
+	my %f;
+	foreach my $field (qw(title video_id description keywords etag view_count recorded duration uploaded)) {
+		$f{$field} = $v->$field;
+	}
+	push @films, \%f;
+	if (not defined $config->{latest} or $config->{latest}{uploaded} lt $f{uploaded}) {
+		$config->{latest} = {%f};
+	}
+	# TODO most popular? selected list?
+}
+$config->{films} = \@films;
 
 DumpFile($config_file, $config);
 

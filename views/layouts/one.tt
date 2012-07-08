@@ -34,11 +34,9 @@ body {
           </a>
           <a class="brand" href="/"><% channel %></a>
           <div class="nav-collapse">
-<!--
             <ul class="nav">
-              <li><a href="/archive">Archive</a></li>
+              <li><a href="/all">All</a></li>
             </ul>
--->
             <ul class="nav pull-right">
               <li><a href="/about">About</a></li>
             </ul>

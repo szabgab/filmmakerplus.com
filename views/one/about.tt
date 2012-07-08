@@ -1,3 +1,7 @@
+About the channel owner: <% profile.about_me %>
+
+<hr />
+
 We have to put some info here about this site....
 <p>
 Created by <a href="http://szabgab.com/">Gabor Szabo</a>.
