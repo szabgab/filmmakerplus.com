@@ -27,3 +27,8 @@ engines:
 #     start_tag: '[%'
 #     end_tag:   '%]'
 
+PerlTV:
+  filmmakerplus.com:
+    channel: filmmakerplus
+  szabgab.com:
+    channel: gabor529
