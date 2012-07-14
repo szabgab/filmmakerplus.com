@@ -46,7 +46,7 @@ get '/v/:id' => sub {
 	my $channels = vars->{channels};
 	($channels->{current}) =  grep { $_->{video_id} eq param('id') } @{ $channels->{films} };
 	$channels->{page_title} = $channels->{current}{title};
-    template 'one/index', $channels, { layout => 'one' };
+    template 'one/v', $channels, { layout => 'one' };
 };
 
 get '/about' => sub {
