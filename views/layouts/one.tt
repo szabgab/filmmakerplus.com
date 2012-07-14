@@ -50,6 +50,8 @@ body {
       <% content %>
     </div>
     <div class="span2">
+       <br></br>
+        <h1>Most viewed videos</h1>
          <% IF show_thumbnails %>
          <% FOR f IN films %>
 		   <% IF loop.index < 5 %>

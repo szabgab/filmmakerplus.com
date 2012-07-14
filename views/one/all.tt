@@ -1,9 +1,26 @@
+<div class="page-header">
+  <h1>All of the videos:</h1>
+</div>
+<div class="hero-unit">
 
-<ul>
-<% FOR f IN films %>
-<li>
-    <img src = "<% f.thumbnails.0.url %>"> <a href="/v/<% f.video_id %>">
-    <a href="/v/<% f.video_id %>"><% f.title %></a>
-</li>
-<% END %>
+<div class="content_container">
+
+<ul style="list-style-type: none;">
+    <% FOR f IN films %>
+            <% IF loop.odd %>
+                <li style="margin-bottom:12px;"> 
+                   <a href="/v/<% f.video_id %>"><img src="<% f.thumbnails.0.url %>" /></a>
+                   <a href="/v/<% f.video_id %>"><% f.title %></a>
+            <% ELSE %>
+                    <div style="float: right;">
+                        <a href="/v/<% f.video_id %>"><% f.title %></a>
+                        <a href="/v/<% f.video_id %>"><img src="<% f.thumbnails.0.url %>" /></a>
+                    </div> 
+                </li>
+            <% END %>
+    <% END %>
 </ul>
+
+</div>
+</div>
+   

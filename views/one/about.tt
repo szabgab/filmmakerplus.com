@@ -1,6 +1,6 @@
 
 <div class="hero-unit">
-  <h1><% brand %></h1>
+  <h1>About <% brand %>:</h1>
   <img src="<% profile.thumbnail %>" />
  <p>
   <% IF profile.about_me %>
@@ -35,3 +35,5 @@ Site created by <a href="http://szabgab.com/">Gabor Szabo</a>.
   <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>
 -->
+
+

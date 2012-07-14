@@ -1,19 +1,37 @@
-
+<%- USE Math -%>
 <div class="hero-unit">
   <h1><% brand %></h1>
 
   <p>
-    <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
-      Subscribe via YouTube
-    </a>
-<h2>
-<% current.title %> :
-</h2>
-<iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
-
-<p>
-<% current.description %>
-</p>
-  </p>
+        <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
+            Subscribe via YouTube
+        </a>
 </div>
 
+  
+<div class="hero-unit">
+  <h2><% current.title %> :</h2>
+
+  <iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
+
+      <p>
+        <% current.description %>
+      </p>
+   </p>
+</div>
+<div class="hero-unit">
+<h2>More videos:</h2>
+<div class="row">
+         <% FOR thing IN [ 1 2 3] %>
+        <div class="span4">
+         <% film1 = Math.rand(films.size) %>
+             <h2><% films.${ film1 }.title %></h2>  
+            <img src="<% films.${ film1 }.thumbnails.0.url %>" />
+
+           <br>
+          <a class="btn" href="/v/<% films.${ film1 }.video_id %>">More »</a></p>
+        </div>
+        
+        <% END %>
+</div>
+</div>
