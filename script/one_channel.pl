@@ -123,5 +123,18 @@ foreach my $v (@videos) {
 }
 $config->{films} = \@films;
 
+my $playlists = $yt->get_user_playlists($channel);
+foreach my $pl (@$playlists) {
+	my %d = (
+		title       => $pl->title,
+		playlist_id => $pl->playlist_id,
+		keywords    => $pl->keywords,
+		is_private  => $pl->is_private,
+	);
+	push @{ $config->{playlists} }, \%d;
+	#say $pl->summary; # how to get the value?
+}
+
+
 DumpFile($config_file, $config);
 

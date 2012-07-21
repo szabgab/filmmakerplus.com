@@ -36,6 +36,9 @@ body {
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="/videos">Videos</a></li>
+			  <% IF playlists %>
+                 <li><a href="/playlists">Playlists</a></li>
+			  <% END %>
             </ul>
             <ul class="nav pull-right">
               <li><a href="/about">About</a></li>

@@ -1,0 +1,19 @@
+<%- USE Math -%>
+<div class="hero-unit">
+  <h1><% brand %></h1>
+
+  <p>
+        <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
+            Subscribe via YouTube
+        </a>
+</div>
+
+  
+<div class="hero-unit">
+  <h2>Playlists</h2>
+  <ul>
+  <% FOR p IN playlists %>
+     <li><a href="<% p.playlist_id %>"><% p.title %></a></li>
+  <% END %>
+  </ul>
+</div>
