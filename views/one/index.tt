@@ -11,8 +11,20 @@
   
 <div class="hero-unit">
   <h2><% current.title %> :</h2>
+  <script type="text/javascript" src="/javascripts/swfobject.js"></script>    
+  <script type="text/javascript" src="/javascripts/youtube.js"></script>    
+  <div id="ytapiplayer">
+    You need Flash player 8+ and JavaScript enabled to view this video.
+  </div>
 
-  <iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
+  <script type="text/javascript">
+
+    var params = { allowScriptAccess: "always" };
+    var atts = { id: "myytplayer" };
+    swfobject.embedSWF("http://www.youtube.com/v/<% current.video_id %>?enablejsapi=1&playerapiid=ytplayer&version=3",
+                       "ytapiplayer", "425", "356", "8", null, null, params, atts);
+  </script>
+  
 
       <p>
         <% current.description %>
