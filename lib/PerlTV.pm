@@ -49,6 +49,11 @@ get '/v/:id' => sub {
     template 'one/v', $channels, { layout => 'one' };
 };
 
+get '/playlists' => sub {
+	my $channels = vars->{channels};
+	$channels->{page_title} = "Playlists of " . vars->{channel};
+    template 'one/playlists', $channels, { layout => 'one' };
+};
 get '/about' => sub {
 	my $channels = vars->{channels};
 	$channels->{page_title} = "About " . vars->{channel};
