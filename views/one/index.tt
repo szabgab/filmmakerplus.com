@@ -11,12 +11,14 @@
   
 <div class="hero-unit">
   <h2><% current.title %> :</h2>
-
-  <iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
-
-      <p>
+<div style="float: right;">
+      
         <% current.description %>
-      </p>
+
+      </div> 
+      <br>
+        <iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
+      
    </p>
 </div>
 <div class="hero-unit">
