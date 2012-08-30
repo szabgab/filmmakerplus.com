@@ -17,3 +17,12 @@ function onytplayerStateChange(newState) {
     //ytplayer.cueVideoByUrl(ytplayer.getVideoUrl());
    }
 }
+
+function displayVideo(id) {
+    var params = { allowScriptAccess: "always" };
+    var atts = { id: "myytplayer" };
+    swfobject.embedSWF("http://www.youtube.com/v/" + id + "?enablejsapi=1&playerapiid=ytplayer&version=3",
+                       "ytapiplayer", "853", "480", "8", null, null, params, atts);
+}
+
+

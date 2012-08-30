@@ -9,19 +9,14 @@
 <div class="hero-unit">
   <h2><% current.title %> :</h2>
 
-  <script type="text/javascript" src="/javascripts/swfobject.js"></script>
-  <script type="text/javascript" src="/javascripts/youtube.js"></script>
   <div id="ytapiplayer">
     You need Flash player 8+ and JavaScript enabled to view this video.
   </div>
 
-  <script type="text/javascript">
+<script type="text/javascript">
+displayVideo("<% current.video_id %>");
+</script>
 
-    var params = { allowScriptAccess: "always" };
-    var atts = { id: "myytplayer" };
-    swfobject.embedSWF("http://www.youtube.com/v/<% current.video_id %>?enablejsapi=1&playerapiid=ytplayer&version=3",
-                       "ytapiplayer", "853", "480", "8", null, null, params, atts);
-  </script>
 
       <p>
       <div style="float: left;">
