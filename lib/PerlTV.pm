@@ -4,6 +4,7 @@ use Dancer ':syntax';
 our $VERSION = '0.1';
 
 use YAML qw(LoadFile);
+use Data::Dumper qw(Dumper);
 
 #get '/' => sub {
 #	my $channels = LoadFile config->{appdir} . '/data/channels.yml';
@@ -33,6 +34,11 @@ hook before_template => sub {
 	$tokens->{clicky}  = vars->{myconfig}{clicky};
 	$tokens->{show_thumbnails} = 1 unless request->uri =~ m{/videos};
 	$tokens->{host} = $ENV{PERLTV} || request->host;
+	#for my $f (@{ $tokens->{films} }) {
+	#	next if not defined $f->{description};
+	#	#$f->{description} =~ s{(http://\S+)}{<a href="$1">$1</a>}g;
+	#}
+	$tokens->{current}{description} =~ s{(http://\S+)}{<a href="$1">$1</a>}g;
 };
 
 
