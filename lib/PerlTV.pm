@@ -32,6 +32,7 @@ hook before_template => sub {
 	$tokens->{adwords} = vars->{myconfig}{adwords};
 	$tokens->{clicky}  = vars->{myconfig}{clicky};
 	$tokens->{show_thumbnails} = 1 unless request->uri =~ m{/videos};
+	$tokens->{host} = $ENV{PERLTV} || request->host;
 };
 
 
