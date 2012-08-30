@@ -12,7 +12,14 @@
 <div class="hero-unit">
   <h2><% current.title %> :</h2>
 
-  <iframe width="853" height="480" src="http://www.youtube.com/embed/<% current.video_id %>" frameborder="0" allowfullscreen></iframe>
+  <div id="ytapiplayer">
+    You need Flash player 8+ and JavaScript enabled to view this video.
+  </div>
+  <script type="text/javascript">
+  displayVideo("<% current.video_id %>");
+  </script>
+
+
 
       <p>
         <% current.description %>
