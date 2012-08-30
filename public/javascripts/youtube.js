@@ -9,6 +9,11 @@ function onytplayerStateChange(newState) {
    //alert("Player's new state: " + newState);
    ytplayer = document.getElementById("myytplayer");
    if (newState == 0) {
-       ytplayer.cueVideoById('DWW4vL_Zq_U');
+	var before = ytplayer.getVideoUrl();
+	//alert(before);
+    var after = before.replace(/.*v=(\w*)/, "$1");
+	//alert(after);
+    ytplayer.cueVideoById(after);
+    //ytplayer.cueVideoByUrl(ytplayer.getVideoUrl());
    }
 }
