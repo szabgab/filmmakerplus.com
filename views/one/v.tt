@@ -3,15 +3,12 @@
   <h1><% brand %></h1>
 
   <p>
-        <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">
-            Subscribe via YouTube
-        </a>
+  <a class="btn btn-primary btn-large" href="http://www.youtube.com/subscription_center?add_user=<% channel %>">Subscribe via YouTube</a>
+  </p>
 </div>
 
-  
 <div class="hero-unit">
   <h2><% current.title %> :</h2>
-
   <div id="ytapiplayer">
     You need Flash player 8+ and JavaScript enabled to view this video.
   </div>
@@ -19,26 +16,21 @@
   displayVideo("<% current.video_id %>");
   </script>
 
-
-
-      <p>
-        <% current.description %>
-      </p>
-   </p>
+  <p>
+    <% current.description %>
+  </p>
 </div>
 <div class="hero-unit">
-<h2>More videos:</h2>
-<div class="row">
-         <% FOR thing IN [ 1 2 3] %>
-        <div class="span4">
-         <% film1 = Math.rand(films.size) %>
-             <h2><% films.${ film1 }.title %></h2>  
-            <img src="<% films.${ film1 }.thumbnails.0.url %>" />
-
-           <br>
-          <a class="btn" href="/v/<% films.${ film1 }.video_id %>">More »</a></p>
-        </div>
-        
-        <% END %>
-</div>
+  <h2>More videos:</h2>
+  <div class="row">
+    <% FOR thing IN [ 1 2 3] %>
+      <div class="span4">
+        <% film1 = Math.rand(films.size) %>
+        <h2><% films.${ film1 }.title %></h2>
+        <img src="<% films.${ film1 }.thumbnails.0.url %>" />
+        <br>
+        <a class="btn" href="/v/<% films.${ film1 }.video_id %>">More »</a></p>
+      </div>
+    <% END %>
+  </div>
 </div>
