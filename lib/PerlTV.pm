@@ -38,6 +38,7 @@ hook before_template => sub {
 	#	next if not defined $f->{description};
 	#	#$f->{description} =~ s{(http://\S+)}{<a href="$1">$1</a>}g;
 	#}
+	$tokens->{current}{description} ||= '';
 	$tokens->{current}{description} =~ s{(http://\S+)}{<a href="$1">$1</a>}g;
 };
 
