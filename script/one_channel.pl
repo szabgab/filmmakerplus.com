@@ -3,15 +3,28 @@ use strict;
 use warnings;
 use v5.12;
 
-use YAML         qw(LoadFile DumpFile);
 use Data::Dumper qw(Dumper);
+use Getopt::Long qw(GetOptions);
 use MIME::Lite   ();
+use YAML         qw(LoadFile DumpFile);
 use WebService::GData::YouTube ();
 
-my $yt = WebService::GData::YouTube->new();
 
 my $conf = LoadFile 'config.yml';
-usage() if not @ARGV;
+
+my %opts;
+GetOptions(\%opts,
+	'help',
+	'sendmail',
+	'all',
+	'sites',
+	'debug',
+) or usage();
+usage() if $opts{help};
+print_sites() if $opts{sites};
+
+usage('Need either site names on the command line or --all') if not @ARGV and not $opts{all};
+usage('Either site names on the command line or --all, but not both of them') if @ARGV and $opts{all};
 process_sites(@ARGV);
 exit;
 #############################
@@ -19,9 +32,17 @@ exit;
 sub process_sites {
 	my @sites = @_;
 
-	foreach my $site (@sites) {
-		process($site);
+	if (@sites) {
+		foreach my $site (@sites) {
+			process($site);
+		}
+	} else {
+		foreach my $site (keys %{ $conf->{PerlTV} }) {
+			process($site);
+		}
 	}
+
+	return;
 }
 
 
@@ -29,11 +50,14 @@ sub process {
 	my ($site) = @_;
 
 
+	debug("Processing $site");
+
 	if (not $conf->{PerlTV}{$site}) {
 		warn "Site '$site' is not available\n";
 	}
 
 	my $channel = $conf->{PerlTV}{$site}{channel};
+	debug("Channel $channel");
 	my $data_file = "data/$channel.yml";
 
 	my $old_data;
@@ -45,13 +69,17 @@ sub process {
 
 	my $time = time;
 
+	my $yt = WebService::GData::YouTube->new();
 	my $profile = $yt->get_user_profile($channel);
+	debug("Got profile");
 
 	my %profile = map { $_ => $profile->$_ } profile_fields();
 	my $stat = $profile->statistics;
 	my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
 	$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
 	$new_data->{profile} = \%profile;
+
+	debug("Profile fetched");
 
 	my @videos = reverse sort {$a->view_count <=> $b->view_count} @{ $yt->get_user_videos($channel) };
 
@@ -101,7 +129,11 @@ sub process {
 		#say $pl->summary; # how to get the value?
 	}
 
+	debug("Data collection done");
+
 	DumpFile($data_file, $new_data);
+
+	debug("Data Saved");
 
 
 	my $text = '';
@@ -112,7 +144,9 @@ sub process {
 			$text .= "$f changed from $old_data->{profile}{statistics}{$f} to $new_data->{profile}{statistics}{$f}\n";
 		}
 	}
-	if ($text) {
+
+	if ($opts{sendmail} and $text) {
+		debug("Preparing to send mail");
 		$text = "Report for $site\n\n$text";
 		my $mail = MIME::Lite->new(
 			To      => 'Gabor Szabo <szabgab@gmail.com>',
@@ -123,11 +157,34 @@ sub process {
 		$mail->send('smtp', 'localhost') or warn "Could not send mail for '$site' $!\n";
 	}
 
+	debug("Site $site DONE\n");
+
 	return;
 }
 
 sub usage {
-	print "Usage: $0 site(s)\n";
+	my ($msg) = @_;
+
+	if ($msg) {
+		print "**** $msg\n\n";
+	}
+	print <<"USAGE";
+Usage: $0
+    --help
+
+    --all       process allt the sites
+    sites(s)    process the specific sites
+
+    --sites     list available sites
+    --sendmail  send reports by e-mail
+
+    --debug
+USAGE
+
+	exit;
+}
+
+sub print_sites {
 	print "Available sites:\n\n";
 	foreach my $k (keys %{ $conf->{PerlTV} }) {
 		say "  $k";
@@ -137,28 +194,28 @@ sub usage {
 
 sub profile_fields {
 	return qw(
-    	updated
-    	published
-    	title
+		updated
+		published
+		title
 
-    	about_me
-    	first_name
-    	last_name
-    	age
-    	username
+	   	about_me
+		first_name
+		last_name
+		age
+		username
 
-    	books
-    	gender
-    	company
-    	hobbies
-    	hometown
-    	location
-    	movies
-    	music
-    	relationship
-    	occupation
-    	school
-    	thumbnail
+		books
+		gender
+		company
+		hobbies
+		hometown
+		location
+		movies
+		music
+		relationship
+		occupation
+		school
+		thumbnail
 	);
 }
 
@@ -186,4 +243,11 @@ sub video_fields {
 }
 
 
+sub debug {
+	my ($msg) = @_;
+	return if not $opts{debug};
+
+	print "DEBUG: $msg\n";
+	return;
+}
 
