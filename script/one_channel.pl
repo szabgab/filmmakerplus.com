@@ -10,73 +10,26 @@ use WebService::GData::YouTube;
 my $yt = WebService::GData::YouTube->new();
 
 my $conf = LoadFile 'config.yml';
-
-my ($site) = @ARGV;
-if (not $site) {
-	print "Usage: $0 site\n";
-	print "Available sites:\n\n";
-	foreach my $k (keys %{ $conf->{PerlTV} }) {
-		say "  $k";
-	}
-	exit;
-}
-if (not $conf->{PerlTV}{$site}) {
-	die "Site '$site' is not available\n";
-}
-
-my @profile_fields = qw(
-    updated
-    published
-    title
-
-    about_me
-    first_name
-    last_name
-    age
-    username
-
-    books
-    gender
-    company
-    hobbies
-    hometown
-    location
-    movies
-    music
-    relationship
-    occupation
-    school
-    thumbnail
-);
-
-my @video_fields = qw(
-	title
-	video_id
-	description
-	keywords
-	etag
-	view_count
-	favorite_count
-	duration
-	uploaded
-	media_player
-	aspect_ratio
-	comments
-	appcontrol_state
-	denied_countries
-	restriction
-	uploaded
-	genre
-	location
-);
-
-
-process($site);
+usage() if not @ARGV;
+process_sites(@ARGV);
 exit;
 #############################
 
+sub process_sites {
+	my @sites = @_;
+
+	foreach my $site (@sites) {
+		process($site);
+	}
+}
+
+
 sub process {
 	my ($site) = @_;
+
+	if (not $conf->{PerlTV}{$site}) {
+		die "Site '$site' is not available\n";
+	}
 
 	my $channel = $conf->{PerlTV}{$site}{channel};
 	my $config_file = "data/$channel.yml";
@@ -88,7 +41,7 @@ sub process {
 
 	my $profile = $yt->get_user_profile($channel);
 
-	my %profile = map { $_ => $profile->$_ } @profile_fields;
+	my %profile = map { $_ => $profile->$_ } profile_fields();
 	my $stat = $profile->statistics;
 	my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
 	$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
@@ -119,7 +72,7 @@ sub process {
 		#die Dumper $content;
 		# TODO array of WebService::GData::YouTube::YT::Media::Content
 
-		foreach my $field (@video_fields) {
+		foreach my $field (video_fields()) {
 			$f{$field} = $v->$field;
 		}
 		push @films, \%f;
@@ -146,5 +99,65 @@ sub process {
 
 	return;
 }
+
+sub usage {
+	print "Usage: $0 site(s)\n";
+	print "Available sites:\n\n";
+	foreach my $k (keys %{ $conf->{PerlTV} }) {
+		say "  $k";
+	}
+	exit;
+}
+
+sub profile_fields {
+	return qw(
+    	updated
+    	published
+    	title
+
+    	about_me
+    	first_name
+    	last_name
+    	age
+    	username
+
+    	books
+    	gender
+    	company
+    	hobbies
+    	hometown
+    	location
+    	movies
+    	music
+    	relationship
+    	occupation
+    	school
+    	thumbnail
+	);
+}
+
+sub video_fields {
+	return qw(
+		title
+		video_id
+		description
+		keywords
+		etag
+		view_count
+		favorite_count
+		duration
+		uploaded
+		media_player
+		aspect_ratio
+		comments
+		appcontrol_state
+		denied_countries
+		restriction
+		uploaded
+		genre
+		location
+	);
+}
+
 
 
