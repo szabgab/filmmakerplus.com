@@ -3,10 +3,11 @@ use strict;
 use warnings;
 use v5.12;
 
-use YAML qw(LoadFile DumpFile);
+use YAML         qw(LoadFile DumpFile);
 use Data::Dumper qw(Dumper);
+use MIME::Lite   ();
+use WebService::GData::YouTube ();
 
-use WebService::GData::YouTube;
 my $yt = WebService::GData::YouTube->new();
 
 my $conf = LoadFile 'config.yml';
@@ -27,15 +28,20 @@ sub process_sites {
 sub process {
 	my ($site) = @_;
 
+
 	if (not $conf->{PerlTV}{$site}) {
-		die "Site '$site' is not available\n";
+		warn "Site '$site' is not available\n";
 	}
 
 	my $channel = $conf->{PerlTV}{$site}{channel};
-	my $config_file = "data/$channel.yml";
-	#die if not -e $config_file;
+	my $data_file = "data/$channel.yml";
 
-	my $config;
+	my $old_data;
+	if (-e $data_file) {
+		$old_data = LoadFile $data_file;
+	}
+
+	my $new_data;
 
 	my $time = time;
 
@@ -45,12 +51,12 @@ sub process {
 	my $stat = $profile->statistics;
 	my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
 	$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
-	$config->{profile} = \%profile;
+	$new_data->{profile} = \%profile;
 
 	my @videos = reverse sort {$a->view_count <=> $b->view_count} @{ $yt->get_user_videos($channel) };
 
 	my @films;
-	$config->{calculated}{number_of_videos} = scalar @videos;
+	$new_data->{calculated}{number_of_videos} = scalar @videos;
 	foreach my $v (@videos) {
 		my %f;
 		#my $recorded = $v->recorded; # TODO  this is a WebService::GData::YouTube::YT::Recorded object
@@ -76,12 +82,12 @@ sub process {
 			$f{$field} = $v->$field;
 		}
 		push @films, \%f;
-		if (not defined $config->{latest} or $config->{latest}{uploaded} lt $f{uploaded}) {
-			$config->{latest} = {%f};
+		if (not defined $new_data->{latest} or $new_data->{latest}{uploaded} lt $f{uploaded}) {
+			$new_data->{latest} = {%f};
 		}
 		# TODO most popular? selected list?
 	}
-	$config->{films} = \@films;
+	$new_data->{films} = \@films;
 
 	my $playlists = $yt->get_user_playlists($channel);
 	foreach my $pl (@$playlists) {
@@ -91,11 +97,31 @@ sub process {
 			keywords    => $pl->keywords,
 			is_private  => $pl->is_private,
 		);
-		push @{ $config->{playlists} }, \%d;
+		push @{ $new_data->{playlists} }, \%d;
 		#say $pl->summary; # how to get the value?
 	}
 
-	DumpFile($config_file, $config);
+	DumpFile($data_file, $new_data);
+
+
+	my $text = '';
+	foreach my $f (qw(total_upload_views view_count)) {
+		$old_data->{profile}{statistics}{$f} ||= 0;
+		$new_data->{profile}{statistics}{$f} ||= 0;
+		if ($old_data->{profile}{statistics}{$f} != $new_data->{profile}{statistics}{$f}) {
+			$text .= "$f changed from $old_data->{profile}{statistics}{$f} to $new_data->{profile}{statistics}{$f}\n";
+		}
+	}
+	if ($text) {
+		$text = "Report for $site\n\n$text";
+		my $mail = MIME::Lite->new(
+			To      => 'Gabor Szabo <szabgab@gmail.com>',
+			From    => 'Perl TV <perltv@szabgab.com>',
+			Subject => "PerlTV for $site",
+			Data    => $text,
+		);
+		$mail->send('smtp', 'localhost') or warn "Could not send mail for '$site' $!\n";
+	}
 
 	return;
 }
