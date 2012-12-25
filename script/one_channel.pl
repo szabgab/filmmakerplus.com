@@ -24,17 +24,6 @@ if (not $conf->{PerlTV}{$site}) {
 	die "Site '$site' is not available\n";
 }
 
-my $channel = $conf->{PerlTV}{$site}{channel};
-my $config_file = "data/$channel.yml";
-#die if not -e $config_file;
-
-
-my $config;
-
-my $time = time;
-
-my $profile = $yt->get_user_profile($channel);
-
 my @profile_fields = qw(
     updated
     published
@@ -60,14 +49,6 @@ my @profile_fields = qw(
     thumbnail
 );
 
-my %profile = map { $_ => $profile->$_ } @profile_fields;
-my $stat = $profile->statistics;
-my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
-$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
-$config->{profile} = \%profile;
-
-my @videos = reverse sort {$a->view_count <=> $b->view_count} @{ $yt->get_user_videos($channel) };
-
 my @video_fields = qw(
 	title
 	video_id
@@ -89,52 +70,81 @@ my @video_fields = qw(
 	location
 );
 
-my @films;
-$config->{calculated}{number_of_videos} = scalar @videos;
-foreach my $v (@videos) {
-	my %f;
-	#my $recorded = $v->recorded; # TODO  this is a WebService::GData::YouTube::YT::Recorded object
 
-	my @thumbnail_fields = qw(url height width time);
-	my $thumbnails = $v->thumbnails;
-	foreach my $tn (@$thumbnails) {
-		my %data = map { $_ => $tn->$_ } @thumbnail_fields;
-		push @{ $f{thumbnails} }, \%data;
+process($site);
+exit;
+#############################
+
+sub process {
+	my ($site) = @_;
+
+	my $channel = $conf->{PerlTV}{$site}{channel};
+	my $config_file = "data/$channel.yml";
+	#die if not -e $config_file;
+
+	my $config;
+
+	my $time = time;
+
+	my $profile = $yt->get_user_profile($channel);
+
+	my %profile = map { $_ => $profile->$_ } @profile_fields;
+	my $stat = $profile->statistics;
+	my @stat_fields = qw(last_web_access view_count subscriber_count video_watch_count total_upload_views);
+	$profile{statistics} = { map { $_ => $stat->$_ } @stat_fields };
+	$config->{profile} = \%profile;
+
+	my @videos = reverse sort {$a->view_count <=> $b->view_count} @{ $yt->get_user_videos($channel) };
+
+	my @films;
+	$config->{calculated}{number_of_videos} = scalar @videos;
+	foreach my $v (@videos) {
+		my %f;
+		#my $recorded = $v->recorded; # TODO  this is a WebService::GData::YouTube::YT::Recorded object
+
+		my @thumbnail_fields = qw(url height width time);
+		my $thumbnails = $v->thumbnails;
+		foreach my $tn (@$thumbnails) {
+			my %data = map { $_ => $tn->$_ } @thumbnail_fields;
+			push @{ $f{thumbnails} }, \%data;
+		}
+
+	    my @rating_fields = qw(num_likes num_dislikes);
+		my $rating = $v->rating; # WebService::GData::YouTube::YT::Rating
+		$f{rating} = { map { $_ => $rating->$_ } @rating_fields };
+
+		# category TODO array of WebService::GData::Node::Media::Category
+
+		#my $content = $v->content;
+		#die Dumper $content;
+		# TODO array of WebService::GData::YouTube::YT::Media::Content
+
+		foreach my $field (@video_fields) {
+			$f{$field} = $v->$field;
+		}
+		push @films, \%f;
+		if (not defined $config->{latest} or $config->{latest}{uploaded} lt $f{uploaded}) {
+			$config->{latest} = {%f};
+		}
+		# TODO most popular? selected list?
+	}
+	$config->{films} = \@films;
+
+	my $playlists = $yt->get_user_playlists($channel);
+	foreach my $pl (@$playlists) {
+		my %d = (
+			title       => $pl->title,
+			playlist_id => $pl->playlist_id,
+			keywords    => $pl->keywords,
+			is_private  => $pl->is_private,
+		);
+		push @{ $config->{playlists} }, \%d;
+		#say $pl->summary; # how to get the value?
 	}
 
-    my @rating_fields = qw(num_likes num_dislikes);
-	my $rating = $v->rating; # WebService::GData::YouTube::YT::Rating
-	$f{rating} = { map { $_ => $rating->$_ } @rating_fields };
+	DumpFile($config_file, $config);
 
-	# category TODO array of WebService::GData::Node::Media::Category
-
-	#my $content = $v->content;
-	#die Dumper $content;
-	# TODO array of WebService::GData::YouTube::YT::Media::Content
-
-	foreach my $field (@video_fields) {
-		$f{$field} = $v->$field;
-	}
-	push @films, \%f;
-	if (not defined $config->{latest} or $config->{latest}{uploaded} lt $f{uploaded}) {
-		$config->{latest} = {%f};
-	}
-	# TODO most popular? selected list?
+	return;
 }
-$config->{films} = \@films;
 
-my $playlists = $yt->get_user_playlists($channel);
-foreach my $pl (@$playlists) {
-	my %d = (
-		title       => $pl->title,
-		playlist_id => $pl->playlist_id,
-		keywords    => $pl->keywords,
-		is_private  => $pl->is_private,
-	);
-	push @{ $config->{playlists} }, \%d;
-	#say $pl->summary; # how to get the value?
-}
-
-
-DumpFile($config_file, $config);
 
