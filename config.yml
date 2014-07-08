@@ -30,7 +30,7 @@ engines:
 PerlTV:
   filmmakerplus.com:
     channel: filmmakerplus
-    clicky: 66614076
+    #clicky: 66614076
   tv.szabgab.com:
     channel: gabor529
   wes.szabgab.com:
